@@ -3,7 +3,7 @@ import { h } from './component/element';
 import DataProxy from './core/data_proxy';
 import Sheet from './component/sheet';
 import Bottombar from './component/bottombar';
-import { cssPrefix } from './config';
+import { cssPrefix, global } from './config';
 import { locale } from './locale/locale';
 import './index.less';
 
@@ -12,6 +12,12 @@ class Spreadsheet {
   constructor(selectors, options = {}) {
     let targetEl = selectors;
     this.options = { showBottomBar: true, ...options };
+    if (this.options.global) {
+      const keys = Object.keys(this.options.global);
+      keys.forEach((key) => {
+        global[key] = this.options.global[key];
+      });
+    }
     this.sheetIndex = 1;
     this.datas = [];
     if (typeof selectors === 'string') {

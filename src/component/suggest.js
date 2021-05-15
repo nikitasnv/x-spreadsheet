@@ -1,6 +1,6 @@
 import { h } from './element';
 import { bindClickoutside, unbindClickoutside } from './event';
-import { cssPrefix } from '../config';
+import { cssPrefix, global } from '../config';
 
 function inputMovePrev(evt) {
   evt.preventDefault();
@@ -97,7 +97,7 @@ export default class Suggest {
   search(word) {
     let { items } = this;
     if (!/^\s*$/.test(word)) {
-      items = items.filter(it => (it.key || it).startsWith(word.toUpperCase()));
+      items = items.filter(it => (it.key || it).toUpperCase().startsWith(word.toUpperCase()));
     }
     items = items.map((it) => {
       let { title } = it;
@@ -127,6 +127,48 @@ export default class Suggest {
     // items[0].toggle();
     el.html('').children(...items).show();
     bindClickoutside(el.parent(), () => { this.hide(); });
+  }
+
+  searchRemote(word, path) {
+    if (!global.baseUrl) {
+      return;
+    }
+    const url = new URL(`${global.baseUrl}/${path}`);
+    const params = { query: word };
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+    fetch(url).then((response) => {
+      response.json().then((result) => {
+        const items = result.map((it) => {
+          let { title } = it;
+          if (title) {
+            if (typeof title === 'function') {
+              title = title();
+            }
+          } else {
+            title = it;
+          }
+          const item = h('div', `${cssPrefix}-item`)
+            .child(title)
+            .on('click.stop', () => {
+              this.itemClick(it);
+              this.hide();
+            });
+          if (it.label) {
+            item.child(h('div', 'label').html(it.label));
+          }
+          return item;
+        });
+        this.filterItems = items;
+        if (items.length <= 0) {
+          return;
+        }
+        const { el } = this;
+        // items[0].toggle();
+        el.html('').children(...items).show();
+        bindClickoutside(el.parent(), () => { this.hide(); });
+      });
+    });
   }
 
   bindInputEvents(input) {

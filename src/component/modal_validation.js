@@ -26,7 +26,7 @@ export default class ModalValidation extends Modal {
     );
     const cf = new FormField(
       new FormSelect('list',
-        ['list', 'number', 'date', 'phone', 'email'],
+        ['url', 'list', 'number', 'date', 'phone', 'email', 'empty'],
         '100%',
         it => t(`dataValidation.type.${it}`),
         it => this.criteriaSelected(it)),
@@ -38,7 +38,7 @@ export default class ModalValidation extends Modal {
     // operator
     const of = new FormField(
       new FormSelect('be',
-        ['be', 'nbe', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte'],
+        ['set', 'be', 'nbe', 'eq', 'neq', 'lt', 'lte', 'gt', 'gte'],
         '160px',
         it => t(`dataValidation.operator.${it}`),
         it => this.criteriaOperatorSelected(it)),
@@ -120,7 +120,7 @@ export default class ModalValidation extends Modal {
       vf.hide();
       svf.hide();
     } else {
-      if (it === 'list') {
+      if (it === 'list' || it === 'url' || it === 'empty') {
         svf.show();
       } else {
         svf.hide();
@@ -149,7 +149,11 @@ export default class ModalValidation extends Modal {
       } else {
         vf.hint('10');
       }
-      vf.show();
+      if (it === 'set') {
+        vf.hide();
+      } else {
+        vf.show();
+      }
       minvf.hide();
       maxvf.hide();
     }

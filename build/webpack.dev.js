@@ -27,5 +27,17 @@ module.exports = merge(common, {
   devServer: {
     host: 'localhost',
     contentBase: '../dist',
+    proxy: {
+      '/test': {
+        bypass: (req, res) => {
+            console.log(req.query)
+            const data = []
+            for(let i = 0; i < 100; i++) {
+                data.push({key: 'test' + i, title: 'test' + i})
+            }
+          return res.send(data.filter(val => val.title.includes(req.query.query)))
+        },
+      },
+    },
   },
 });

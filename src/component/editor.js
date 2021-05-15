@@ -60,6 +60,11 @@ function inputEventHandler(evt) {
   // console.log(evt, 'v:', v);
   const { suggest, textlineEl, validator } = this;
   const { cell } = this;
+
+  if (validator && validator.type === 'url') {
+    suggest.searchRemote(v, validator.value);
+  }
+
   if (cell !== null) {
     if (('editable' in cell && cell.editable === true) || (cell.editable === undefined)) {
       this.inputText = v;
@@ -126,8 +131,8 @@ function setText(text, position) {
 function suggestItemClick(it) {
   const { inputText, validator } = this;
   let position = 0;
-  if (validator && validator.type === 'list') {
-    this.inputText = it;
+  if (validator && (validator.type === 'list' || validator.type === 'url')) {
+    this.inputText = typeof it === 'object' ? it.title : it;
     position = this.inputText.length;
   } else {
     const start = inputText.lastIndexOf('=');

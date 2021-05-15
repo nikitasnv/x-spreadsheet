@@ -68,6 +68,9 @@ export default class Validator {
     if (type === 'list') {
       return returnMessage(this.values().includes(v), 'notIn');
     }
+    if (type === 'url') {
+      return returnMessage(true, 'notIn');
+    }
     if (operator) {
       const v1 = this.parseValue(v);
       if (operator === 'be') {

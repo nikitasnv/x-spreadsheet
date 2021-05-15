@@ -116,13 +116,16 @@ export default {
       row: 'Row',
     },
     type: {
+      url: 'Url',
       list: 'List',
       number: 'Number',
       date: 'Date',
       phone: 'Phone',
       email: 'Email',
+      empty: 'Empty',
     },
     operator: {
+      set: 'set',
       be: 'between',
       nbe: 'not betwwen',
       lt: 'less than',

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title><%= htmlWebpackPlugin.options.title %></title>
-    
+
 </head>
 <body onload="load()">
   <div style="position: fixed; right: 0; top: .3em;">
@@ -48,7 +48,7 @@
         }
       };
       // x_spreadsheet.locale('zh-cn');
-      var xs = x_spreadsheet('#x-spreadsheet-demo', {showToolbar: true, showGrid: true, showBottomBar: true})
+      var xs = x_spreadsheet('#x-spreadsheet-demo', {showToolbar: true, showGrid: true, showBottomBar: true, global: {baseUrl: 'http://localhost:8080'}})
         .loadData([{
           freeze: 'B3',
           styles: [
